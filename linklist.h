@@ -1,87 +1,97 @@
-#ifndef LINKLIST_H_INCLUDED
-#define LINKLIST_H_INCLUDED
-#include <cstddef>
+#ifndef INCLUDE_LINKLIST_H
+#define INCLUDE_LINKLIST_H
 
+
+namespace util{
+namespace datastruct{
+
+//#define T int
 template<typename T>
-class LinkdListLnk{
-    private:
-        T* point = nullptr;
-        LinkdListLnk<T>* linknext= nullptr;
-
-    public:
-    LinkdListLnk(T initval){
-        point = new T{initval};
-		this->LinkdListLnk = nullptr;
-    }
-    
-	LinkdListLnk(T initval , LinkdListLnk<T>* next){
-        point = new T{initval};
-		this->LinkdListLnk = next;
-    }
-    
-    ~LinkdListLnk(){
-        delete point;
-    }
-    
-    const T& getval() const{
-        return *point;
-    }
-    
-    const LinkdListLnk* getlink() const{
-        return this->linknext;
-    }
-
-    bool set_next_link(LinkdListLnk* next){
-        if (linknext != nullptr){
-           linknext = next;
-           return true; 
-        }
-        else {
-			next->setnext(this->linknext);
-			linknext = next;
-			return true;
-		}
-		return false;
-        
-    }
-    bool remove_next_link(){
-		if(this->LinkdListLnk != nullptr){
-			LinkdListLnk<T> temp = this->linknext->getlink();
-			this->linknext->~LinkdListLnk();
-			this->linknext = temp;
-		}
-		return false;
-	}
-
-    void setval (T val){
-        *point = val;
-    }
-
+struct LinkdListLink{
+	//LinkdListLink(T arg1,LinkdListLink* arg2){value = arg1 ; next_link = arg2;}
+	T value;
+	LinkdListLink<T>* next_link = nullptr;
 };
 
 template<typename T>
 class LinkdList{
-    private:
-		LinkdListLnk<T>* first;
-		LinkdListLnk<T>* curent;
-		std::size_t ref_count=0;
-      
-   
-    public:
-		LinkdList(T val){
-			first = LinkdListLnk<T>(val);
+private:
+	LinkdListLink<T>* base = nullptr;
+	LinkdListLink<T>* curent = nullptr;
+	unsigned* refcount;
+public:
+	LinkdList(T value){
+		
+		base = new LinkdListLink<T>;
+		base->value = value;
+		curent = base;
+		refcount = new unsigned{1};
+		
+	}
+	LinkdList(const LinkdList& other):base(other.base),curent(other.curent),refcount(other.refcount){
+		(*refcount)++;
+	}
+	~LinkdList(){
+		--(*refcount);
+		if(*refcount == 0){
+			delete refcount;
+			curent = base;
+			base = nullptr;
+			
+			while(curent->next_link != nullptr){
+				remove_next_element();
+			}
+			delete curent;
+			
 		}
-		void insert_value_to_list(T val){
-			curent = LinkdListLnk<T>(val, curent->getlink);
+		
+	}
+	void add_element_to_list(T value){
+		if(curent->next_link == nullptr){
+			curent->next_link = new LinkdListLink<T>;
+			curent->next_link->value = value;
+			return;
 		}
+		auto temp = curent->next_link;
+		curent->next_link = new LinkdListLink<T>;
+		curent->next_link->value = value;
+		curent->next_link->next_link = temp;
+		return;
+	}
+	T get_vlue(){
 		
+		return curent->value;
+	}
+	bool remove_next_element(){
+		if(curent->next_link == nullptr){;return false;}
+		auto temp = curent->next_link->next_link;
+		delete curent->next_link;
+		curent->next_link = temp;
+		return true;
+	}
+	bool mov_to_next_element(){
+		//std::cout <<"moi2\n";
+		if(curent->next_link == 0){return false;}
 		
-		
-		~LinkdList(){}
-		
-		
-
+		curent = curent->next_link;
+		return true;
+	}
+	void mov_to_first_element(){
+		curent = base;
+	}
+// 	void remove_this_iterator(LinkdList** this_iterator){
+// 		*this_iterator = nullptr;
+// 		--refcount;
+// 		if(refcount == 0){delete this; return;}
+// 	}
+	
 };
 
+}}//namespase util::datastruct
 
-#endif // LINKLIST_H_INCLUDED
+
+
+
+
+
+#endif
