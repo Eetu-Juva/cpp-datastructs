@@ -39,12 +39,10 @@ public:
 			base = nullptr;
 			
 			while(curent->next_link != nullptr){
-				remove_next_element();
+				delete_next_element();
 			}
 			delete curent;
-			
 		}
-		
 	}
 	void add_element_to_list(T value){
 		if(curent->next_link == nullptr){
@@ -59,10 +57,12 @@ public:
 		return;
 	}
 	T get_vlue(){
-		
 		return curent->value;
 	}
-	bool remove_next_element(){
+	void set_value(T value){
+		curent->value = value;
+	}
+	bool delete_next_element(){
 		if(curent->next_link == nullptr){;return false;}
 		auto temp = curent->next_link->next_link;
 		delete curent->next_link;
@@ -70,9 +70,7 @@ public:
 		return true;
 	}
 	bool mov_to_next_element(){
-		//std::cout <<"moi2\n";
 		if(curent->next_link == 0){return false;}
-		
 		curent = curent->next_link;
 		return true;
 	}
@@ -84,7 +82,6 @@ public:
 // 		--refcount;
 // 		if(refcount == 0){delete this; return;}
 // 	}
-	
 };
 
 }}//namespase util::datastruct
