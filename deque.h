@@ -13,7 +13,6 @@ private:
 	Varray<T>* array;
 	unsigned front=0;
 	unsigned back=0;
-	
 public:
 	Deque(){
 		array = new Varray<T>(5);
@@ -49,7 +48,9 @@ public:
 		if(back == 0){return {};}
 		return array->get_val(back -1);
 	}
-	
+	unsigned elements_in_queue(){
+		return back;
+	}
 	
 };
 	
