@@ -7,7 +7,7 @@
 namespace util{
 namespace datastruct {
 	enum sift_directson{rigth,left};
-template<typename T,T nullval>	
+template<typename T>	
 class Varray{
 private:
 	T* arr;
@@ -22,10 +22,12 @@ public:
 	delete arr;
 	}
 	T get_val(unsigned index){
-		if(index > count){return nullval;}
+		if(index > count){return {};}
 		return arr[index];
 	}
-	unsigned get_sizse(){return count;}
+	unsigned get_sizse(){
+		return count;
+	}
 	bool set_value(unsigned index,T vallue){
 		if(index > count){return false;}
 		arr[index] = vallue;
@@ -43,14 +45,14 @@ public:
 	void sift_by(unsigned amount,sift_directson direction){
 		if(direction == sift_directson::left){
 			for(unsigned i=0;i<count;++i){
-				if(i+amount >= count){arr[i]=nullval; continue;}
+				if(i+amount > count){arr[i]={}; continue;}
 				arr[i] = arr[i + amount];
 			}
 			return;
 		}
 		else if(direction == sift_directson::rigth){
 			for(unsigned i = count - 1; i < count ; --i){
-				if((int)i - (int)amount <= 0){arr[i]=nullval; continue;}
+				if((int)i - (int)amount < 0){arr[i]={}; continue;}
 				arr[i] = arr[i - amount];
 			}
 			return;
