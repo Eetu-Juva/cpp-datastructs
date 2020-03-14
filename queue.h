@@ -17,18 +17,24 @@ public:
 	Queue(){
 		array = new Varray<T>(5);
 	}
-	void push(T vall){
+	void push_back(T vall){
 		array->set_value(back,vall);
 		++back;
 		if(back >= array->get_sizse()){array->expand_by(5);}
 	}
-	T get_next(){
+	T peek_front(){
+		if(back == 0){return {};}
+		return array->get_val(front);
+	}
+	
+	T pop_front(){
 		if(back == 0){return {};}
 		--back;
 		T temp = array->get_val(front);
 		array->sift_by(1,sift_directson::left);
 		return temp;
 	}
+	
 	unsigned elements_in_queue(){
 		return back;
 	}
